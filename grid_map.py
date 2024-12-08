@@ -34,10 +34,22 @@ class GridMap:
             self.antennae[frequency] = [(x, y)]
 
     def project_antinodes(self):
-        pass
+        for f, frequency in enumerate(self.antennae):
+            # print("{f}: {list}".format(f=frequency, list=self.antennae[frequency]))
+            if (len(self.antennae[frequency]) < 2): 
+                print("// SKIPPED DUE TO LONELINESS: " + frequency)
+                continue
+            print("// PROJECTING COORDS FOR: " + frequency)
+            for a, antenna in enumerate(self.antennae[frequency]):
+                pass
 
     def print_debug_maps(self):
+        composite_map = deepcopy(self.grid)
+
         antinode_map = deepcopy(self.grid)
+        for n, coords in enumerate(self.antinodes):
+            antinode_map[coords[1]][coords[0]] = '#'
+            composite_map[coords[1]][coords[0]] = '#'
         self.draw_map(antinode_map, "Antinodes only")
 
         antennae_map = deepcopy(self.grid)
@@ -48,8 +60,7 @@ class GridMap:
 
         # reference_map = deepcopy(self.grid)
         # self.draw_map(reference_map, "Reference input")
-
-        composite_map = deepcopy(self.grid)
+        
         self.draw_map(composite_map)
 
     def draw_map(self, map, name = "Composite output"):

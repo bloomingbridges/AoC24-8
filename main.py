@@ -31,7 +31,7 @@ EXAMPLE_B = [
 if __name__ == "__main__":
     with open('input.txt', 'r') as file:
         INPUT = file.readlines()
-    map = GridMap(EXAMPLE_B)
+    map = GridMap(EXAMPLE_A)
     map.find_antennae()
     map.project_antinodes()
     map.print_debug_maps()
