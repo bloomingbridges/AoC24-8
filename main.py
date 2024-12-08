@@ -15,7 +15,7 @@ EXAMPLE = [ "......#....#\n",
             "..........#.\n" ]
 
 if __name__ == "__main__":
-    with open('input.txt', 'r') as f:
-        INPUT = f.readlines()
-    map = GridMap(INPUT)
+    with open('input.txt', 'r') as file:
+        INPUT = file.readlines()
+    map = GridMap(EXAMPLE)
 
