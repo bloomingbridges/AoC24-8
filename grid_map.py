@@ -33,7 +33,7 @@ class GridMap:
         else:
             self.antennae[frequency] = [(x, y)]
 
-    def project_antinodes(self):
+    def project_antinodes(self, resonant_harmonics=False):
         for f, frequency in enumerate(self.antennae):
             # print("{f}: {list}".format(f=frequency, list=self.antennae[frequency]))
             if (len(self.antennae[frequency]) < 2): 
@@ -42,9 +42,14 @@ class GridMap:
             print("// PROJECTING COORDS FOR: " + frequency)
             applicants = self.antennae[frequency]
             for a, antenna in enumerate(applicants):
-                for b, bantenna in enumerate(applicants):
+                for b, bntenna in enumerate(applicants):
                     if (a == b): continue
-                    else: self.project_antinode(antenna, bantenna)
+                    elif resonant_harmonics:
+                        self.record_antinode_position(antenna)
+                        self.record_antinode_position(bntenna)
+                        self.project_infinitely(antenna, bntenna)
+                    else:
+                        self.project_antinode(antenna, bntenna)
                         
     def project_antinode(self, a, b):
         delta = (b[0] - a[0], b[1] - a[1])
@@ -52,9 +57,16 @@ class GridMap:
         if self.is_within_bounds(c):
             print("// {a} -> {b} --{d}--> {c}".format(a=a, b=b, c=c, d=delta))
             self.record_antinode_position(c)
+            return c
         else:
             print("// OUT OF BOUNDS: {coords}".format(coords=c))
+            return False
     
+    def project_infinitely(self, a, b):
+        c = self.project_antinode(a, b)
+        if bool(c): 
+            self.project_infinitely(b, c)
+
     def record_antinode_position(self, coords):
         if coords not in self.antinodes:
             self.antinodes.append(coords)
