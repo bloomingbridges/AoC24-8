@@ -39,11 +39,25 @@ EXAMPLE_C = [
                 "....#.....\n",
                 "..........\n"
 ]
+EXAMPLE_D = [
+                "##....#....#\n",
+                ".#.#....0...\n",
+                "..#.#0....#.\n",
+                "..##...0....\n",
+                "....0....#..\n",
+                ".#...#A....#\n",
+                "...#..#.....\n",
+                "#....#.#....\n",
+                "..#.....A...\n",
+                "....#....A..\n",
+                ".#........#.\n",
+                "...#......##\n"
+]
 
 if __name__ == "__main__":
     with open('input.txt', 'r') as file:
         INPUT = file.readlines()
-    map = GridMap(EXAMPLE_C)
+    map = GridMap(EXAMPLE_D)
     map.find_antennae()
     map.project_antinodes(True)
     map.print_debug_maps()
