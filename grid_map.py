@@ -40,27 +40,48 @@ class GridMap:
                 print("// SKIPPED DUE TO LONELINESS: " + frequency)
                 continue
             print("// PROJECTING COORDS FOR: " + frequency)
-            for a, antenna in enumerate(self.antennae[frequency]):
-                pass
+            applicants = self.antennae[frequency]
+            for a, antenna in enumerate(applicants):
+                for b, bantenna in enumerate(applicants):
+                    if (a == b): continue
+                    else: self.project_antinode(antenna, bantenna)
+                        
+    def project_antinode(self, a, b):
+        delta = (b[0] - a[0], b[1] - a[1])
+        c = (b[0] + delta[0], b[1] + delta[1])
+        if self.is_within_bounds(c):
+            print("// {a} -> {b} --{d}--> {c}".format(a=a, b=b, c=c, d=delta))
+            self.record_antinode_position(c)
+        else:
+            print("// OUT OF BOUNDS: {coords}".format(coords=c))
+    
+    def record_antinode_position(self, coords):
+        # TODO Check for duplicates
+        self.antinodes.append(coords)
+
+    def is_within_bounds(self, coords):
+        if coords[0] >= 0 and coords[0] < self.width and coords[1] >=0 and coords[1] < self.height:
+            return True
+        else:
+            return False
 
     def print_debug_maps(self):
         composite_map = deepcopy(self.grid)
-
+        
         antinode_map = deepcopy(self.grid)
         for n, coords in enumerate(self.antinodes):
             antinode_map[coords[1]][coords[0]] = '#'
             composite_map[coords[1]][coords[0]] = '#'
-        self.draw_map(antinode_map, "Antinodes only")
 
         antennae_map = deepcopy(self.grid)
         for f, frequency in enumerate(self.antennae):
             for c, coords in enumerate(self.antennae[frequency]):
                 antennae_map[coords[1]][coords[0]] = frequency
-        self.draw_map(antennae_map, "Antennae only")
+                composite_map[coords[1]][coords[0]] = frequency
 
-        # reference_map = deepcopy(self.grid)
-        # self.draw_map(reference_map, "Reference input")
-        
+        self.draw_map(antennae_map, "Antennae only")
+        self.draw_map(antinode_map, "Antinodes only")
+        self.draw_map(self.data, "Reference input")        
         self.draw_map(composite_map)
 
     def draw_map(self, map, name = "Composite output"):
