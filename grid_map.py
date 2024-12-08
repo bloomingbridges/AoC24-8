@@ -56,8 +56,10 @@ class GridMap:
             print("// OUT OF BOUNDS: {coords}".format(coords=c))
     
     def record_antinode_position(self, coords):
-        # TODO Check for duplicates
-        self.antinodes.append(coords)
+        if coords not in self.antinodes:
+            self.antinodes.append(coords)
+        else:
+            print("// SKIPPED DUE TO DUPLICATION: {coords}".format(coords=coords))
 
     def is_within_bounds(self, coords):
         if coords[0] >= 0 and coords[0] < self.width and coords[1] >=0 and coords[1] < self.height:
@@ -93,3 +95,9 @@ class GridMap:
                     row_string += col
             print(row_string)
         print()
+
+    def report_total(self, verbose=False):
+        print("// {sum} UNIQUE ANTINODES PROJECTED".format(sum=len(self.antinodes)))
+        if verbose:
+            for n, coords in enumerate(self.antinodes):
+                print(coords)
